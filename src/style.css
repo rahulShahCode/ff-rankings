@@ -49,14 +49,7 @@ button:hover{
     justify-content: center;
 }
 
-.switch-field input {
-	position: absolute !important;
-	clip: rect(0, 0, 0, 0);
-	height: 1px;
-	width: 1px;
-	border: 0;
-	overflow: hidden;
-}
+
 
 .switch-field label {
 
@@ -64,11 +57,12 @@ button:hover{
 	line-height: 1;
 	text-align: center;
 	padding: 20px 80px;
-	margin-right: -1px;
+	margin-right: 10px;
 	border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius:4px;
 	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
 	transition: all 0.5s ease-in-out;
+    cursor:pointer;
 }
 
 .switch-field label:hover {
@@ -87,4 +81,8 @@ button:hover{
 
 .switch-field label:last-of-type {
 	border-radius: 0 4px 4px 0;
+}
+
+#content div {
+    width:100%
 }

@@ -3,8 +3,11 @@ from yahoo_oauth import OAuth2
 import xml.etree.ElementTree as ET
 import os.path 
 
-league_id = 'nfl.l.136310'
-url = 'https://fantasysports.yahooapis.com/fantasy/v2/league/{}'.format(league_id)
+home_league_id = 'nfl.l.136310'
+home_team_id = 1
+work_league_id = 'nfl.l.1348306'
+work_team_id = 7
+url = 'https://fantasysports.yahooapis.com/fantasy/v2/league/{}'
 secrets_path = "~/workspace/ff-rankings/secrets.json"
 oauth = OAuth2(None, None, from_file=os.path.expanduser(secrets_path))
 
@@ -36,13 +39,13 @@ def parse_xml(xml, type:str):
 
         return rostered 
 
-def get_available_players():
+def get_available_players(league_id):
     params = "/players;status=A;start={};count=25"
     start = 0
     done = False 
     available = []
     while not done: 
-        response = oauth.session.get(url + params.format(start))
+        response = oauth.session.get(url.format(league_id) + params.format(start))
         write('~/workspace/ff-rankings/output/yahoo_debug',response.text)
         parsed_response = parse_xml(response.text, "available")
         available.extend(parsed_response)
@@ -50,7 +53,7 @@ def get_available_players():
         if len(parsed_response) < 25:
             done = True 
     return available  
-def get_team_roster(team_id): 
+def get_team_roster(league_id, team_id): 
     id = league_id + '.t.' + str(team_id)
     rostered_url = f"https://fantasysports.yahooapis.com/fantasy/v2/team/{id}/roster/players"
     response = oauth.session.get(rostered_url)

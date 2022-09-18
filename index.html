@@ -13,25 +13,30 @@
       document.getElementById(pos).style.display = "block";
     }*/
   </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <script src="rankings.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="src/style.css">
   <title>FF Rankings</title>
 </head>
 <body>
   <div class="buttons">
+    <button class="bar-item" onclick="openPosition('QB', this)">QB</button> 
     <button class="bar-item" onclick="openPosition('RB', this)">RB</button> 
     <button class="bar-item" onclick="openPosition('WR', this)">WR</button> 
     <button class="bar-item" onclick="openPosition('TE', this)">TE</button> 
+    <button class="bar-item" onclick="openPosition('FLX', this)">FLX</button>
+    <button class="bar-item" onclick="openPosition('K', this)">K</button> 
+    <button class="bar-item" onclick="openPosition('DEF', this)">DEF</button> 
 
   </div>
   <div id="content">
   </div>
   <div class="switch-field">
-    <input type="radio" id="mfl" name="switch" value="mfl" />
+    <input type="radio" id="mfl" name="league" value="mfl" onclick="openLeague()">
     <label for="mfl">MFL</label>
-    <input type="radio" id="home" name="switch" value="home" checked />
+    <input type="radio" id="home" name="league" value="home" checked>
     <label for="home">HOME</label>
-    <input type="radio" id="work" name="switch" value="work" />
+    <input type="radio" id="work" name="league" value="work">
     <label for="work">WORK</label>
   </div>
 </body>

@@ -14,12 +14,18 @@ def init() -> list:
             if pos == 'K':
                 lst.append(df.iloc[i][0].split(' ')[0])
             elif pos == 'DEF':
-                lst.append(df.iloc[i][0].split('vs.')[0].strip())
+                team_str = df.iloc[i][0]
+                if 'vs.' in team_str:
+                    team_str = team_str.split('vs.')[0]
+                else:
+                    team_str = team_str.split('@')[0]
+                team_str = team_str.strip()
+                lst.append(team_str)
         return lst 
     
     lst = []
-    lst.append(convert(get_rankings(url,header,"kicker")[0]), 'K')
-    lst.append(convert(get_rankings(url,header,"defense")[0]), 'DEF')
+    lst.append(convert(get_rankings(url,header,"kicker")[0], 'K'))
+    lst.append(convert(get_rankings(url,header,"defense")[0], 'DEF'))
     return lst
 
 if __name__ == '__main__':
