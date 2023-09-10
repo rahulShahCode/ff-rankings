@@ -3,10 +3,8 @@ from yahoo_oauth import OAuth2
 import xml.etree.ElementTree as ET
 import os.path 
 
-home_league_id = 'nfl.l.136310'
+home_league_id = 'nfl.l.165477'
 home_team_id = 1
-work_league_id = 'nfl.l.1348306'
-work_team_id = 7
 url = 'https://fantasysports.yahooapis.com/fantasy/v2/league/{}'
 secrets_path = "~/workspace/ff-rankings/secrets.json"
 oauth = OAuth2(None, None, from_file=os.path.expanduser(secrets_path))
@@ -21,12 +19,16 @@ def parse_xml(xml, type:str):
     players_xpath = f'.//{ns}league/{ns}players'
     player_name_xpath=f'./{ns}name/{ns}full'
     team_name_xpath = f'./{ns}editorial_team_full_name'
+    def_pos_xpath = f'./{ns}display_position'
     root = ET.fromstring(xml)
     if type == "available":
         players_lst = list(root.find(players_xpath))
         available = [] 
         for child in players_lst: 
-            name = child.find(player_name_xpath)
+            if child.find(def_pos_xpath).text == 'DEF': 
+                name = child.find(team_name_xpath)
+            else: 
+                name = child.find(player_name_xpath)
             available.append(name.text)
         return available 
     elif type == "rostered":
@@ -34,7 +36,10 @@ def parse_xml(xml, type:str):
         players_lst = list(root.find(rostered_xpath))
         rostered = []
         for child in players_lst:
-            name = child.find(player_name_xpath)
+            if child.find(def_pos_xpath).text == 'DEF': 
+                name = child.find(team_name_xpath)
+            else: 
+                name = child.find(player_name_xpath)
             rostered.append(name.text)
 
         return rostered 

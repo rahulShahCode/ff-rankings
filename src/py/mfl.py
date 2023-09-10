@@ -1,7 +1,7 @@
 import requests 
-url = "https://api.myfantasyleague.com/2022/export"
-league_id = 71437
-my_team_id = '0014'
+url = "https://api.myfantasyleague.com/2023/export"
+league_id = 62247
+my_team_id = '0011'
 POS = ["RB", "WR", "TE"]
 
 

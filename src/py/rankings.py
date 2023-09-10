@@ -1,32 +1,35 @@
 import pandas
 import requests
+from bs4 import BeautifulSoup
 
 def get_rankings(url:str, header:str, pos:str) -> pandas.DataFrame:                     
     html = requests.get(url.format(pos), headers=header).text
     return pandas.read_html(html, header=1)
-def init() -> list: 
-    url = "https://subvertadown.com/weekly/{}?sort=current_week_projection&sort_direction=desc&platform=yahoo"
-    header = { "cookie" : "__stripe_mid=5a7cef6d-e0b2-4515-a6c3-019c8fc06ea3c57892; remember_web_59ba36addc2b2f9401580f014c7f58ea4e30989d=eyJpdiI6Imc2aTgzWHF3R1pseXcxWXlEMXpKRHc9PSIsInZhbHVlIjoiUnBzR0tWRkRuRzhYN3NMN0FmdDBHMVdsUWF0ZGM1S2hGVThzYkdJayszb0hCTGpIeXNqUzN1MHFHL1Z1SkhXcHBCVFlibnRGRXJlbjdub2xEZ0MxSUxHNHYxc3dzMjBxNkRlQ0I5Zm9rbGR0R2RxRGV5Mjgyekp5cm1jdFN1WGdtNi9veFV5WjdhOUhNb016alZUY3orWi92YnFlS3pPb2pzTld5RFd5a2lsMjNFc2VsRzVZOUtiVUxHU2lFMVRYbzZNYTBmRTY4N0NzOWl1QlhGdVFkNFRNdytXRHpUdzN5Nyt3eW5pcTZJRT0iLCJtYWMiOiI3MjBjZGRiZDA4NjZkZGZmZGI3NzY2YzVkNWFiMjYyMjdjNzEzZDZhNTdlNTM2ZDU1ZGNmNDgyNDc1OWEwNTljIiwidGFnIjoiIn0%3D; XSRF-TOKEN=eyJpdiI6IjVhNUdFa2VkaVBtNzVUY3BialFpNWc9PSIsInZhbHVlIjoiTHVpZnlubU5scmNHS2h4ZXZncmxGdVpCaHVzWlJPQlRydCtBSWtkMUtncEtHdEJDbWg3T0lGM0wyZHUxOHBXSmRPcW5aT0c3Y0FmVW52TmFuZXJFSUJPejZHanQ3dTI0dkNBcHY0VUlCUVBSRmNqL1JCL1ZjTDFEb1RQWVJPbCsiLCJtYWMiOiI5MGVlNTVmOWM4MWJlNDhlYzU1MjRlMjI3ZjM0N2Y1ZTY4NGFhNjBiOTBmNmEzZmZiNjVkYWEyY2VkMDA3NDExIiwidGFnIjoiIn0%3D; subvertadown_session=eyJpdiI6IkRMUjB1dFNjKyswVktoVmlyZWx4Q2c9PSIsInZhbHVlIjoiYW9wWlFCS3pCcWJEa1NGYTlVaGgyOW5rV2x6Ymt1YkNmeTdBSHFzNE1KbWg4ZkFkcXc2T3BlYndGTVJMSElHVE5LZVdOODBnTHd5Q25QVXFJSDZqeU02YUpuZmJKUCtxWTBaSFVNdmNvL3N6ZUFWbHhDSXZmVlpKMG96ZWVFUmQiLCJtYWMiOiJlZjEwMDA1NGViMmZiZjBhMGViMTM2NDY1OWMyZDM0ZDMyYTBlYmVjOGY2OWQ3YTdmYzFkNGZlY2U0NWVkMDE2IiwidGFnIjoiIn0%3D; __stripe_sid=96a2a545-3fbc-49ac-ba71-c4b3dd56053bbaed6e"
+def init() -> dict: 
+    subvertadown_rankings = {}
+    position = ['kicker', 'defense']
+    url = "https://subvertadown.com/weekly/{}"
+    params = {
+        'sort' : 'current_week_projection',
+        'sort_direction' : 'desc',
+        'platform' : 'yahoo'
     }
-    def convert(df:pandas.DataFrame, pos:str) -> list:
-        lst = [] 
-        for i in range(len(df)):
-            if pos == 'K':
-                lst.append(df.iloc[i][0].split(' ')[0])
-            elif pos == 'DEF':
-                team_str = df.iloc[i][0]
-                if 'vs.' in team_str:
-                    team_str = team_str.split('vs.')[0]
-                else:
-                    team_str = team_str.split('@')[0]
-                team_str = team_str.strip()
-                lst.append(team_str)
-        return lst 
-    
-    lst = []
-    lst.append(convert(get_rankings(url,header,"kicker")[0], 'K'))
-    lst.append(convert(get_rankings(url,header,"defense")[0], 'DEF'))
-    return lst
+    header = { "User-Agent" : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        "Cookie" : "__stripe_mid=ffc09ada-d8e3-4b8c-ad09-0d8b80ba44db3ce6e8; remember_web_59ba36addc2b2f9401580f014c7f58ea4e30989d=eyJpdiI6ImNlRlR5MmRGeWJ1TGVaSzJoNzNPckE9PSIsInZhbHVlIjoiY1FmcHhFSis2ejA2VnFhbk9BTVZaaWkwWVRyRC80dWRyTzFKTzNsMWRqS0pXMXNqZkFxaTRBbVNibGRVcnQrMUtObzBuS1pKSTVQTTh2SDBva3B0andPZ1lVUnZRdzY1R1R4YktsaUdKVkNHTi9vWHBkOU4rYTdqK20rREh2Rm5nK3g0VzlQWklrUWYzTzBCMXRxT3FiR3k1RDhCbWhxaElianVpb1R1U1ExNUFnaTFYYUFsYU50S1huTkNJLzdCKzZKcXAxSHJGZGxXUlFwMkxUSTBIbDNMQ1ZiSlRYUFFCT1JBdkpBam5IUT0iLCJtYWMiOiIwMWM0MDQ0MjdmODU0Zjg1NTQ3ODk5YWM4NTAzNmIyMWQ3NWE4MmJjMjg5OTYyNzQ4Y2UyNWVmOGZlYjc4OWQyIiwidGFnIjoiIn0%3D; __stripe_sid=8b3cd079-6e4b-4389-a9b0-de534c7ce01c87a4c3; XSRF-TOKEN=eyJpdiI6InZ4Y3I3K3NISlNHNjJndjY0OGFmY3c9PSIsInZhbHVlIjoiSUdCRk5CUHNTR3ozSE5mMjgwSWZQbGdpa0t6K3BDUFZXY0k1eGo2UXB1dk8xVFY2b1ZMbzZXUXF1ZzhYNVF3ZENnV1pjNHkvVDZtWW5aTzljSEt4Z3k1SHpRdVlpaTE0K1pnbHBJQ1VQT2R2U01yOEpabDQwYk81ckdCOXRHbVUiLCJtYWMiOiI1ZGQyOWYzMmNmZjAxMWYwZDIyNjA0OTk4OTRhZGI1NjBiMDc5YjI3NTYzYTg0MTQwNjdiOWYzMWM4NjYxYjZiIiwidGFnIjoiIn0%3D; subvertadown_session=eyJpdiI6Ii9LMDVZMzhTT1VXSi9vY1hsWTQ1ZVE9PSIsInZhbHVlIjoiM2xMd2llS2tBWXovWkRabVkyM2VGT3hBTnp3TjBjMUpiQ2Z0cjhYckRndk9kZk80ak9EU25XZzRxWUVhRWQxN3Qya0lYdDRLTTRHNjhhaGRWOWFXMnRML3RRVk9UNGtpRGN3ZWVNejNobEF4QVNCdm5VOWd0Unk2VmNPNWFYR3EiLCJtYWMiOiI1MTc4MmE2YzIwYjBiNDcwMGZkNGQ2MzkyMDgzNTVjNzAyZTExNDg4MmFmOTEwYjZjNjA2NjI5YzU4MGJlZWNmIiwidGFnIjoiIn0%3D"}
+
+    for p in position:       
+        resp = requests.get(url.format(p),params=params,headers=header)
+        soup = BeautifulSoup(resp.content, 'html.parser')
+
+        spans_text = [] 
+        table = soup.find('table', class_='sub-table')
+        if table: 
+            for td in table.find_all('td', class_='-sticky'):
+                span = td.find('span')
+                if span:
+                    spans_text.append(span.get_text(strip=True))
+        subvertadown_rankings[p] = spans_text 
+    return subvertadown_rankings            
 
 if __name__ == '__main__':
     print(init())
