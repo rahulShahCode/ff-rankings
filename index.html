@@ -20,7 +20,7 @@
 </head>
 <body>
   <div class="buttons">
-    <button class="bar-item" onclick="openPosition('QB', this)">QB</button> 
+    <button class="bar-item selected" onclick="openPosition('QB', this)">QB</button> 
     <button class="bar-item" onclick="openPosition('RB', this)">RB</button> 
     <button class="bar-item" onclick="openPosition('WR', this)">WR</button> 
     <button class="bar-item" onclick="openPosition('TE', this)">TE</button> 
@@ -32,12 +32,10 @@
   <div id="content">
   </div>
   <div class="switch-field">
-    <input type="radio" id="mfl" name="league" value="mfl" onclick="openLeague()">
-    <label for="mfl">MFL</label>
-    <input type="radio" id="home" name="league" value="home" checked>
-    <label for="home">HOME</label>
-    <input type="radio" id="work" name="league" value="work">
-    <label for="work">WORK</label>
+    <input type="radio" id="mfl-switch" name="league" value="mfl-switch" onclick="openLeague()">
+    <label for="mfl-switch">MFL</label>
+    <input type="radio" id="home-switch" name="league" value="home-switch" onclick="openLeague()" checked>
+    <label for="home-switch">HOME</label>
   </div>
 </body>
 </html>

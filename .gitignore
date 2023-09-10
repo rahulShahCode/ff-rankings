@@ -1,3 +1,4 @@
 secrets.json 
-output/yahoo_debug
+debug
 .DS_Store
+data.json 

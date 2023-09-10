@@ -5,12 +5,19 @@ function getCheckedVal() {
             return x 
     }
 }
+function updateSelectedButton(button) {
+    let currSelected = document.querySelector('.selected')
+    if (currSelected !== null) 
+        currSelected.classList.remove('selected');
+    button.classList.add('selected')
+}
 function openPosition(pos, button) {
     let checkedVal = getCheckedVal();
+    updateSelectedButton(button)
     let leagues = $('#content > div');
     let currLeague = '#content > #'
     for (let x of leagues) {
-        if (x.id !== checkedVal.value) {
+        if (x.id !== checkedVal.value.slice(0,-7)) {
             x.style = 'display:none'
         } else {
             x.style = 'display:flex'
@@ -32,13 +39,14 @@ function openLeague() {
     let leagues = $('#content > div');
     let currLeague = '#content > #'
     for (let x of leagues) {
-        if (x.id !== checkedVal.value) {
+        if (x.id !== checkedVal.value.slice(0,-7)) {
             x.style = 'display:none'
         } else {
             x.style = 'display:flex'
             currLeague = currLeague.concat(x.id);
         }
     }
+    openPosition($('.selected').text(), $('.selected')[0])
 }
 function loadDataHelper(json,leagueName) {
     let html = `<div id='${leagueName}'`
@@ -55,10 +63,11 @@ function loadDataHelper(json,leagueName) {
             for (let tier in json['rankings'][pos]) {
                 var tier_str = `<p>${tier}: `
                 for (player in json['rankings'][pos][tier]) {
-                    if (json[leagueName]['available'].includes(json['rankings'][pos][tier][player])) {
-                        tier_str = tier_str.concat("<span id='available'>",json['rankings'][pos][tier][player] , "</span>")
-                    } else if (json[leagueName]['rostered'].includes(json['rankings'][pos][tier][player])) {
-                        tier_str = tier_str.concat("<span id='rostered'>",json['rankings'][pos][tier][player] , "</span>")
+                    if (json[leagueName]['rostered'].includes(json['rankings'][pos][tier][player])) {
+                        tier_str = tier_str.concat("<span class='rostered'>",json['rankings'][pos][tier][player] , "</span>")
+                    } 
+                    else if (json[leagueName]['available'].includes(json['rankings'][pos][tier][player])) {
+                        tier_str = tier_str.concat("<span class='available'>",json['rankings'][pos][tier][player] , "</span>")
                     } else {
                         tier_str = tier_str.concat(json['rankings'][pos][tier][player])
                     } 
@@ -70,16 +79,30 @@ function loadDataHelper(json,leagueName) {
                 pos_str = pos_str.concat(tier_str);
             }
             pos_str = pos_str.concat('</div>')
+            html = html.concat(pos_str);
+        } else {
+            var list_str = `<ol class ='${leagueName}' id='${pos}' style='display:none'>`
+            for (player in json['rankings'][pos]) {
+                if (json[leagueName]['rostered'].includes(json['rankings'][pos][player])) {
+                    list_str = list_str.concat("<li class='rostered'>", json['rankings'][pos][player], "</li>");
+                }
+                else if (json[leagueName]['available'].includes(json['rankings'][pos][player])) {
+                    list_str = list_str.concat("<li class='available'>", json['rankings'][pos][player], "</li>");
+                } 
+                else {
+                    list_str = list_str.concat("<li>", json['rankings'][pos][player], "</li>");
+                }
+            }
+            list_str = list_str.concat("</ol>");
+            html = html.concat(list_str);
         }
-        if(pos_str !== undefined)
-            html = html.concat(pos_str)
     }
     html = html.concat('</div>')
     document.getElementById('content').innerHTML = document.getElementById('content').innerHTML.concat(html);
 }
 
 function loadData(json) {
-    let leagues = ["home", 'work', 'mfl']
+    let leagues = ['home', 'mfl']
     for (i in leagues) {
         if (Object.keys(json[leagues[i]]).length !== 0) {
             loadDataHelper(json, leagues[i])   
