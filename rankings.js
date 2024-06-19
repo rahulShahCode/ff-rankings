@@ -84,13 +84,13 @@ function loadDataHelper(json,leagueName) {
             var list_str = `<ol class ='${leagueName}' id='${pos}' style='display:none'>`
             for (player in json['rankings'][pos]) {
                 if (json[leagueName]['rostered'].includes(json['rankings'][pos][player])) {
-                    list_str = list_str.concat("<li class='rostered'>", json['rankings'][pos][player], "</li>");
+                    list_str = list_str.concat("<li><span class='rostered'>", json['rankings'][pos][player], "</span></li>");
                 }
                 else if (json[leagueName]['available'].includes(json['rankings'][pos][player])) {
-                    list_str = list_str.concat("<li class='available'>", json['rankings'][pos][player], "</li>");
+                    list_str = list_str.concat("<li><span class='available'>", json['rankings'][pos][player], "</span></li>");
                 } 
                 else {
-                    list_str = list_str.concat("<li>", json['rankings'][pos][player], "</li>");
+                    list_str = list_str.concat("<li>", json['rankings'][pos][player], "</span></li>");
                 }
             }
             list_str = list_str.concat("</ol>");
@@ -115,3 +115,11 @@ window.onload = (event) => {
     .then(response => response.json())
     .then(json => loadData(json))
 };
+function toggleDarkMode() {
+    let bodyElement = document.body;
+    let elementsToToggle = document.querySelectorAll('body, .buttons, button, #content, .rostered, .available, .switch-field');
+    
+    for (let elem of elementsToToggle) {
+        elem.classList.toggle('dark-mode');
+    }
+}

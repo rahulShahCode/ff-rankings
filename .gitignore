@@ -2,3 +2,4 @@ secrets.json
 debug
 .DS_Store
 data.json 
+__pycache__/

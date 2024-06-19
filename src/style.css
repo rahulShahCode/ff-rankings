@@ -112,8 +112,8 @@ body {
 .rostered {
     background-color: #7e9320;
     color:#ffffff;
-    padding: 2px 4px;
-    border-radius: 4px;
+    padding: 1px 3px;
+    border-radius: 3px;
     margin: 0 2px;
 }
 
@@ -121,8 +121,8 @@ body {
 .available {
     background-color: #FF8C42;
     color:#ffffff;
-    padding: 2px 4px;
-    border-radius: 4px;
+    padding: 1px 3px;
+    border-radius: 3px;
     margin: 0 2px;
 }
 
@@ -172,4 +172,54 @@ body {
 
 .switch-field input[type="radio"]:checked + label + .slider {
     left: 50%;
+}
+
+/* Reducing the default padding and margin for defense and kicker ordered lists */
+ol#DEF li, ol#K li {
+    margin-left: 10px;
+    padding-left: 0;
+}
+
+/* Dark Mode Styles */
+
+/* General styles for dark mode */
+body.dark-mode {
+    background-color: #121212; /* Dark background */
+    color: #E0E0E0; /* Light text color */
+}
+
+/* Styling the buttons in dark mode */
+.buttons.dark-mode {
+    background-color: #1f1f1f;
+}
+
+.buttons.dark-mode button {
+    background: #3a3a3a;
+}
+
+.buttons.dark-mode button:hover {
+    background-color: #FF8C42;
+}
+
+.buttons.dark-mode button.selected {
+    background-color: #FF8C42;
+}
+
+/* Styling the switch field in dark mode */
+.switch-field.dark-mode {
+    background-color: #1f1f1f;
+}
+
+/* Styling the content area in dark mode */
+#content.dark-mode {
+    background-color: #1f1f1f;
+}
+
+/* Adjusting rostered and available colors for better visibility in dark mode */
+.rostered.dark-mode {
+    background-color: #85ad33;
+}
+
+.available.dark-mode {
+    background-color: #FFA76E;
 }

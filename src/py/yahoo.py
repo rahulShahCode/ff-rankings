@@ -51,7 +51,7 @@ def get_available_players(league_id):
     available = []
     while not done: 
         response = oauth.session.get(url.format(league_id) + params.format(start))
-        write('~/workspace/ff-rankings/output/yahoo_debug',response.text)
+       # write('~/workspace/ff-rankings/debug/yahoo_debug',response.text)
         parsed_response = parse_xml(response.text, "available")
         available.extend(parsed_response)
         start+= 25
