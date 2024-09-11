@@ -3,3 +3,4 @@ debug
 .DS_Store
 data.json 
 __pycache__/
+odds_creation

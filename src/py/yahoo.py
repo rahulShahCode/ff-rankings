@@ -3,7 +3,7 @@ from yahoo_oauth import OAuth2
 import xml.etree.ElementTree as ET
 import os.path 
 
-home_league_id = 'nfl.l.165477'
+home_league_id = 'nfl.l.787316'
 home_team_id = 1
 url = 'https://fantasysports.yahooapis.com/fantasy/v2/league/{}'
 secrets_path = "~/workspace/ff-rankings/secrets.json"
