@@ -221,10 +221,13 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 1;
 }
 
 .switch-field input:checked + label {
     color: white;
+    z-index: 2;
 }
 
 .slider {
