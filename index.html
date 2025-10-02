@@ -4,38 +4,119 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script>
- /*   function openPosition(pos) {
-      let x = document.getElementsByClassName("position");
-      for (let i = 0; i < x.length; i++) {
-        x[i].style.display = "none";
-      }
-      document.getElementById(pos).style.display = "block";
-    }*/
-  </script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-  <script src="rankings.js"></script>
-  <link rel="stylesheet" href="src/style.css">
-  <title>FF Rankings</title>
+  <script src="src/js/core/rankings.js"></script>
+  <script src="src/js/features/enhanced.js"></script>
+  <link rel="stylesheet" href="src/css/style-compact.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <title>Fantasy Football Rankings</title>
 </head>
 <body>
-  <div class="buttons">
-    <button class="bar-item selected" onclick="openPosition('QB', this)">QB</button> 
-    <button class="bar-item" onclick="openPosition('RB', this)">RB</button> 
-    <button class="bar-item" onclick="openPosition('WR', this)">WR</button> 
-    <button class="bar-item" onclick="openPosition('TE', this)">TE</button> 
-    <button class="bar-item" onclick="openPosition('FLX', this)">FLX</button>
-    <button class="bar-item" onclick="openPosition('K', this)">K</button> 
-    <button class="bar-item" onclick="openPosition('DEF', this)">DEF</button> 
+  <div class="header">
+    <div class="header-content">
+      <h1 class="app-title">
+        <i class="fas fa-football-ball"></i>
+        Fantasy Football Rankings
+      </h1>
+      <button class="theme-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </div>
 
-  </div>
-  <div id="content">
-  </div>
-  <div class="switch-field">
-    <input type="radio" id="mfl-switch" name="league" value="mfl-switch" onclick="openLeague()">
-    <label for="mfl-switch">MFL</label>
-    <input type="radio" id="home-switch" name="league" value="home-switch" onclick="openLeague()" checked>
-    <label for="home-switch">HOME</label>
+  <div class="container">
+    <div class="position-controls">
+      <div class="position-buttons">
+        <button class="position-btn selected" onclick="openPosition('QB', this)" data-position="QB">
+          <span class="btn-label">QB</span>
+        </button>
+        <button class="position-btn" onclick="openPosition('RB', this)" data-position="RB">
+          <span class="btn-label">RB</span>
+        </button>
+        <button class="position-btn" onclick="openPosition('WR', this)" data-position="WR">
+          <span class="btn-label">WR</span>
+        </button>
+        <button class="position-btn" onclick="openPosition('TE', this)" data-position="TE">
+          <span class="btn-label">TE</span>
+        </button>
+        <button class="position-btn" onclick="openPosition('FLX', this)" data-position="FLX">
+          <span class="btn-label">FLX</span>
+        </button>
+        <button class="position-btn" onclick="openPosition('K', this)" data-position="K">
+          <span class="btn-label">K</span>
+        </button>
+        <button class="position-btn" onclick="openPosition('DEF', this)" data-position="DEF">
+          <span class="btn-label">DEF</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="league-selector">
+      <div class="switch-field">
+        <input type="radio" id="mfl-switch" name="league" value="mfl-switch" onclick="openLeague()">
+        <label for="mfl-switch">MFL</label>
+        <input type="radio" id="home-switch" name="league" value="home-switch" onclick="openLeague()" checked>
+        <label for="home-switch">HOME</label>
+        <div class="slider"></div>
+      </div>
+    </div>
+
+    <div class="rankings-source-selector">
+      <label for="rankings-source">Rankings Source:</label>
+      <div class="source-buttons">
+        <button class="source-btn active" onclick="selectRankingsSource('boris', this)" data-source="boris">
+          <i class="fas fa-chart-line"></i> Boris Chen
+        </button>
+        <button class="source-btn" onclick="selectRankingsSource('pff', this)" data-source="pff">
+          <i class="fas fa-trophy"></i> PFF
+        </button>
+      </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="filter-controls" id="filterControls" style="display: none;">
+        <button class="filter-btn" onclick="applyFilter('all')" data-filter="all">
+          All Players
+        </button>
+        <button class="filter-btn" onclick="applyFilter('available')" data-filter="available">
+          <i class="fas fa-plus-circle"></i> Available Only
+          <span class="filter-badge" id="availableCount">0</span>
+        </button>
+        <button class="filter-btn" onclick="applyFilter('rostered')" data-filter="rostered">
+          <i class="fas fa-user-check"></i> My Roster
+          <span class="filter-badge" id="rosteredCount">0</span>
+        </button>
+        <button class="filter-btn" onclick="applyFilter('top-available')" data-filter="top-available">
+          <i class="fas fa-star"></i> Top Available
+        </button>
+        <button class="filter-btn" onclick="toggleComparison()" data-filter="comparison">
+          <i class="fas fa-exchange-alt"></i> League Comparison
+        </button>
+      </div>
+
+      <div id="loading" class="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading rankings...</p>
+      </div>
+
+      <div id="content" class="content swipe-container">
+        <div class="swipe-hint" id="swipeHint">
+          <i class="fas fa-hand-point-left"></i> Swipe to navigate
+        </div>
+      </div>
+
+      <div id="comparisonView" class="comparison-view" style="display: none;">
+        <div class="comparison-column" id="league1">
+          <h3>MFL League</h3>
+          <div class="comparison-content"></div>
+        </div>
+        <div class="comparison-column" id="league2">
+          <h3>HOME League</h3>
+          <div class="comparison-content"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </body>
 </html>

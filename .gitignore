@@ -1,6 +1,5 @@
-secrets.json 
-debug
+secrets.json
 .DS_Store
-data.json 
+data.json
 __pycache__/
-odds_creation
+.claude/settings.local.json

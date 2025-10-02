@@ -1,6 +1,14 @@
-import requests 
-import re 
-template_url = "https://s3-us-west-1.amazonaws.com/fftiers/out/text_{}.txt"
+import requests
+import re
+import sys
+import os
+
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+from constants import BORIS_CHEN_URL
+
+template_url = BORIS_CHEN_URL
 
 
 def parse_rankings(rankings:str) -> dict:

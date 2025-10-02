@@ -1,7 +1,15 @@
-import requests 
-url = "https://api.myfantasyleague.com/2024/export"
-league_id = 62247
-my_team_id = '0011'
+import requests
+import sys
+import os
+
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+from constants import MFL_API_URL, MFL_LEAGUE_ID, MFL_TEAM_ID
+
+url = MFL_API_URL
+league_id = MFL_LEAGUE_ID
+my_team_id = MFL_TEAM_ID
 POS = ["RB", "WR", "TE"]
 
 
